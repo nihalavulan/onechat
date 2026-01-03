@@ -136,6 +136,14 @@ const useAuthStore = create((set, get) => {
     },
 
     logout: () => {
+      // Disconnect socket
+      const socket = getSocket();
+      if (socket) {
+        socket.removeAllListeners();
+        disconnectSocketService();
+      }
+
+      // Clear token
       setToken(null);
       set({
         token: null,

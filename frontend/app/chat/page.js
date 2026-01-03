@@ -9,18 +9,10 @@ import notify from '../../src/utils/notifications'
 
 export default function ChatPage() {
   const router = useRouter()
-  const { isAuthenticated, user, initializeAuth, logout } = useAuthStore()
-  const { loadUsers, connectSocket, disconnectSocket, clearChatState } = useChatStore()
+  const { isAuthenticated, initializeAuth } = useAuthStore()
+  const { loadUsers, connectSocket } = useChatStore()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
-
-  const handleLogout = () => {
-    disconnectSocket()
-    clearChatState()
-    logout()
-    notify.success('Logged out successfully')
-    router.push('/login')
-  }
 
   useEffect(() => {
     initializeAuth()
@@ -59,14 +51,8 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+        <div className="mb-6">
           <h1 className="text-3xl font-bold text-text-primary">Chat</h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-error text-text-inverse rounded-md font-medium hover:opacity-90 transition-colors"
-          >
-            Logout
-          </button>
         </div>
         
         {loading ? (

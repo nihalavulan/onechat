@@ -12,26 +12,16 @@ export default function ChatPage() {
   const userId = parseInt(params.userId, 10)
   const messagesEndRef = useRef(null)
 
-  const { isAuthenticated, user, initializeAuth, logout } = useAuthStore()
+  const { isAuthenticated, user, initializeAuth } = useAuthStore()
   const {
     connectSocket,
-    disconnectSocket,
     socketConnected,
     activeChatUser,
     setActiveChatUser,
     messages,
     loadChatHistory,
     sendMessage,
-    clearChatState,
   } = useChatStore()
-
-  const handleLogout = () => {
-    disconnectSocket()
-    clearChatState()
-    logout()
-    notify.success('Logged out successfully')
-    router.push('/login')
-  }
 
   const [messageInput, setMessageInput] = useState('')
   const [chatUser, setChatUser] = useState(null)
@@ -148,7 +138,7 @@ export default function ChatPage() {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="bg-surface border-b border-border p-4">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
+        <div className="max-w-4xl mx-auto">
           <div>
             <h1 className="text-xl font-semibold text-text-primary">
               {chatUser.email}
@@ -159,12 +149,6 @@ export default function ChatPage() {
               <p className="text-sm text-text-muted">Connecting...</p>
             )}
           </div>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-error text-text-inverse rounded-md font-medium hover:opacity-90 transition-colors text-sm"
-          >
-            Logout
-          </button>
         </div>
       </div>
 

@@ -6,4 +6,5 @@
 export { default as apiClient, getToken, setToken } from './client';
 export * from './auth.api';
 export * from './chat.api';
+export * from './social.api';
 
