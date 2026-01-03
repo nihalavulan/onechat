@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import useAuthStore from '../../store/useStore'
+import useAuthStore from '../../store/useAuthStore'
 
 export default function SocialPage() {
   const { user, initializeAuth } = useAuthStore()

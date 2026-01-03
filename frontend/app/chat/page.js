@@ -3,16 +3,20 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import useAuthStore from '../../store/useStore'
+import useAuthStore from '../../store/useAuthStore'
+import useChatStore from '../../store/useChatStore'
 import notify from '../../src/utils/notifications'
 
 export default function ChatPage() {
   const router = useRouter()
-  const { isAuthenticated, user, initializeAuth, loadUsers, connectSocket, logout } = useAuthStore()
+  const { isAuthenticated, user, initializeAuth, logout } = useAuthStore()
+  const { loadUsers, connectSocket, disconnectSocket, clearChatState } = useChatStore()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
 
   const handleLogout = () => {
+    disconnectSocket()
+    clearChatState()
     logout()
     notify.success('Logged out successfully')
     router.push('/login')

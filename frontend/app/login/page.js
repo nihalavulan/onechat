@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import useAuthStore from '../../store/useStore'
+import useAuthStore from '../../store/useAuthStore'
+import useChatStore from '../../store/useChatStore'
 import notify from '../../src/utils/notifications'
 
 export default function LoginPage() {
   const router = useRouter()
   const { isAuthenticated, loading, login, clearError, initializeAuth } = useAuthStore()
+  const { connectSocket } = useChatStore()
 
   // Initialize auth state on mount
   useEffect(() => {
@@ -74,6 +76,9 @@ export default function LoginPage() {
         email: formData.email,
         password: formData.password,
       })
+
+      // Connect socket after login
+      connectSocket()
 
       notify.success('Logged in successfully')
       router.push('/chat')

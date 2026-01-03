@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import useAuthStore from '../../store/useStore'
+import useAuthStore from '../../store/useAuthStore'
+import useChatStore from '../../store/useChatStore'
 import notify from '../../src/utils/notifications'
 
 export default function SignupPage() {
@@ -83,6 +84,9 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
       })
+
+      // Connect socket after signup/login
+      connectSocket()
 
       notify.success('Account created successfully')
       router.push('/chat')

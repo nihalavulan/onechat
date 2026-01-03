@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import useAuthStore from '../../../store/useStore'
+import useAuthStore from '../../../store/useAuthStore'
+import useChatStore from '../../../store/useChatStore'
 import notify from '../../../src/utils/notifications'
 
 export default function ChatPage() {
@@ -11,10 +12,8 @@ export default function ChatPage() {
   const userId = parseInt(params.userId, 10)
   const messagesEndRef = useRef(null)
 
+  const { isAuthenticated, user, initializeAuth, logout } = useAuthStore()
   const {
-    isAuthenticated,
-    user,
-    initializeAuth,
     connectSocket,
     disconnectSocket,
     socketConnected,
@@ -23,11 +22,12 @@ export default function ChatPage() {
     messages,
     loadChatHistory,
     sendMessage,
-    loading,
-    logout,
-  } = useAuthStore()
+    clearChatState,
+  } = useChatStore()
 
   const handleLogout = () => {
+    disconnectSocket()
+    clearChatState()
     logout()
     notify.success('Logged out successfully')
     router.push('/login')
@@ -72,7 +72,7 @@ export default function ChatPage() {
         setLoadingHistory(true)
         
         // Load users to find the chat user
-        const users = await useAuthStore.getState().loadUsers()
+        const users = await useChatStore.getState().loadUsers()
         const foundUser = users.find((u) => u.id === userId)
         
         if (!foundUser) {
