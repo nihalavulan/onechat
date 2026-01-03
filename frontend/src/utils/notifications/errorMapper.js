@@ -6,10 +6,14 @@
 const errorMessages = {
   // Authentication errors
   'INVALID_CREDENTIALS': 'Invalid email or password',
+  'INVALID EMAIL OR PASSWORD': 'Invalid email or password',
   'EMAIL_EXISTS': 'This email is already registered',
+  'EMAIL ALREADY EXISTS': 'This email is already registered',
   'EMAIL_REQUIRED': 'Email is required',
+  'EMAIL AND PASSWORD ARE REQUIRED': 'Email and password are required',
   'PASSWORD_REQUIRED': 'Password is required',
   'PASSWORD_TOO_SHORT': 'Password must be at least 6 characters long',
+  'PASSWORD MUST BE AT LEAST 6 CHARACTERS LONG': 'Password must be at least 6 characters long',
   'INVALID_EMAIL': 'Please enter a valid email address',
   'PASSWORDS_DONT_MATCH': 'Passwords do not match',
   
@@ -19,12 +23,15 @@ const errorMessages = {
   
   // Server errors
   'SERVER_ERROR': 'Something went wrong. Please try again later',
+  'INTERNAL SERVER ERROR': 'Something went wrong. Please try again later',
   'UNAUTHORIZED': 'You are not authorized to perform this action',
   'FORBIDDEN': 'Access denied',
   'NOT_FOUND': 'Resource not found',
   
   // Generic
   'UNKNOWN_ERROR': 'An unexpected error occurred',
+  'LOGIN FAILED': 'Login failed. Please try again',
+  'SIGNUP FAILED': 'Signup failed. Please try again',
 };
 
 /**

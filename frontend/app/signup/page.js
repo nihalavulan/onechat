@@ -1,12 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import useAuthStore from '../../store/useStore'
 import notify from '../../src/utils/notifications'
 
 export default function SignupPage() {
-  const { loading, setLoading, setError, clearError } = useAuthStore()
+  const router = useRouter()
+  const { isAuthenticated, loading, signup, clearError, initializeAuth } = useAuthStore()
+
+  // Initialize auth state on mount
+  useEffect(() => {
+    initializeAuth()
+  }, [initializeAuth])
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/chat')
+    }
+  }, [isAuthenticated, router])
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -64,14 +78,23 @@ export default function SignupPage() {
       return
     }
 
-    setLoading(true)
-    
-    // Simulate API call (no backend integration yet)
-    setTimeout(() => {
-      setLoading(false)
-      // This will be replaced with actual API call later
-      notify.success('Account created successfully (demo)')
-    }, 1000)
+    try {
+      await signup({
+        email: formData.email,
+        password: formData.password,
+      })
+
+      notify.success('Account created successfully')
+      router.push('/chat')
+    } catch (error) {
+      // Error is already handled by the store and errorMapper
+      notify.error(error)
+    }
+  }
+
+  // Don't render if already authenticated (will redirect)
+  if (isAuthenticated) {
+    return null
   }
 
   return (
