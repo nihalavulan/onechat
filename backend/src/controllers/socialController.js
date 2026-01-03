@@ -4,6 +4,7 @@
  */
 
 const socialService = require('../services/socialService');
+const { moderateComment } = require('../services/moderation');
 
 /**
  * Create a new post
@@ -102,8 +103,20 @@ const createComment = async (req, res) => {
       return res.status(404).json({ error: 'Post not found' });
     }
 
-    // Create comment
-    const comment = await socialService.createComment(postIdNum, userId, content.trim());
+    // Moderate comment using AI
+    const trimmedContent = content.trim();
+    const moderationResult = await moderateComment(trimmedContent);
+
+    // If comment is not allowed, reject it
+    if (!moderationResult.allowed) {
+      return res.status(400).json({
+        error: 'Comment rejected',
+        reason: moderationResult.reason,
+      });
+    }
+
+    // Create comment (only if moderation passed)
+    const comment = await socialService.createComment(postIdNum, userId, trimmedContent);
 
     // Format response
     res.status(201).json({

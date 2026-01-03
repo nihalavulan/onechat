@@ -28,6 +28,10 @@ const errorMessages = {
   'FORBIDDEN': 'Access denied',
   'NOT_FOUND': 'Resource not found',
   
+  // Comment moderation errors
+  'COMMENT_REJECTED': 'Comment rejected',
+  'COMMENT REJECTED': 'Comment rejected',
+  
   // Generic
   'UNKNOWN_ERROR': 'An unexpected error occurred',
   'LOGIN FAILED': 'Login failed. Please try again',
@@ -58,6 +62,11 @@ export const mapError = (error) => {
 
   // If it's an object with a message property
   if (error && typeof error === 'object') {
+    // Check for comment rejection with reason
+    if (error.error === 'Comment rejected' && error.reason) {
+      return `Comment rejected: ${error.reason}`;
+    }
+    
     if (error.message) {
       const errorCode = error.message.toUpperCase().replace(/\s+/g, '_');
       if (errorMessages[errorCode]) {
@@ -67,6 +76,22 @@ export const mapError = (error) => {
     }
     
     if (error.error) {
+      // Check if error.error is a string that matches known errors
+      const errorCode = error.error.toUpperCase().replace(/\s+/g, '_');
+      if (errorMessages[errorCode]) {
+        // If there's a reason, include it
+        if (error.reason) {
+          return `${errorMessages[errorCode]}: ${error.reason}`;
+        }
+        return errorMessages[errorCode];
+      }
+      // If error.error is a string, return it (might be user-friendly)
+      if (typeof error.error === 'string') {
+        if (error.reason) {
+          return `${error.error}: ${error.reason}`;
+        }
+        return error.error;
+      }
       return mapError(error.error);
     }
   }

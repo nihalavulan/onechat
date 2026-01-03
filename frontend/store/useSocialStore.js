@@ -143,12 +143,21 @@ const useSocialStore = create((set, get) => {
 
         return formattedComment;
       } catch (error) {
-        const errorMessage = error.message || error.data?.error || 'Failed to create comment';
+        // Preserve the full error object for better error handling
+        // This includes error.data which contains { error: "Comment rejected", reason: "..." }
+        const errorData = error.data || {};
+        const errorMessage = errorData.error || error.message || 'Failed to create comment';
+        
+        // Create error object with reason if available (for moderation rejections)
+        const errorToThrow = errorData.reason 
+          ? { ...error, data: { ...errorData, message: `${errorMessage}: ${errorData.reason}` } }
+          : error;
+        
         set({
           loading: false,
-          error: errorMessage,
+          error: errorData.reason ? `${errorMessage}: ${errorData.reason}` : errorMessage,
         });
-        throw error;
+        throw errorToThrow;
       }
     },
 

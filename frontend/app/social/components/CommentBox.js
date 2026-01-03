@@ -49,7 +49,12 @@ export default function CommentBox({ postId }) {
       setContent('')
       notify.success('Comment added successfully')
     } catch (error) {
-      notify.error(error)
+      // Handle moderation rejection with specific message
+      if (error?.data?.error === 'Comment rejected' && error?.data?.reason) {
+        notify.error(`Comment rejected: ${error.data.reason}`)
+      } else {
+        notify.error(error)
+      }
     } finally {
       setIsSubmitting(false)
     }
