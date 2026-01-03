@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/health', require('./routes/health'));
 app.use('/auth', require('./routes/auth'));
+app.use('/', require('./routes/chat')); // Chat routes: /users, /chats/:userId
 
 module.exports = app;
 
